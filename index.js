@@ -242,6 +242,66 @@ app.delete('/teacher/:id', (req, res) => {
     });
 });
 
+// Classroom CRUD
+// Get all 
+app.get('/classroom', (req, res) => {
+    connection.query("select * from classroom", (err, result) => {
+        if(err) {
+            res.send('Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+// Get one 
+app.get('/classroom/:id', (req, res) => {
+    connection.query("select * from classroom where classroom_id = ?", [req.params.id], (err, result) => {
+        if(err){
+            res.send('Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+// Create one
+app.post('/classroom/create', (req, res) => {
+    let classroom = req.body;
+    let query = "insert into classroom (classroom_id, year, grade_id, section, status, remarks, teacher_id) values (?,?,?,?,?,?,?)";
+    connection.query(query, [classroom.classroom_id, classroom.year, classroom.grade_id, classroom.section, classroom.status, classroom.remarks, classroom.teacher_id], (err, results) => {
+        if(err){
+            return res.status(500);
+        }else{
+            return res.status(200).json({message: 'Information has been successfully updated'});
+        }
+    });
+});
+
+// Update one
+app.patch('/classroom/update/:id', (req, res) => {
+    let classroom = req.body;
+    let query = "UPDATE classroom set classroom_id = ?, year = ?, grade_id = ?, section = ?, status = ?, remarks = ?, teacher_id = ?";
+    connection.query(query, [classroom.classroom_id, classroom.year, classroom.grade_id, classroom.section, classroom.status, classroom.remarks, classroom.teacher_id, Number(req.params.id)], (err, results) => {
+        if(err){
+            return res.status(500);
+        }else{
+            return res.status(200).json({message: 'Information has been successfully updated'});
+        }
+    });
+});
+
+// Delete one
+app.delete('/classroom/:id', (req, res) => {
+    connection.query("DELETE from classroom WHERE classroom_id = ?", [req.params.id], (err, result) => {
+        if(err){res.send('Error');}
+        else{res.send(result);}
+    });
+});
+
+
+
+
 
 
 app.listen('5000', () => {console.log('Connection successful on port 5000')});
