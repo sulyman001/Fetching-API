@@ -52,3 +52,11 @@ app.get('/teacher/:id', (req, res) => {
         }
     });
 });
+
+//Delete 1 from parent
+app.delete('/parent/:id', (req, res) => {
+    connection.query("DELETE from parent WHERE parent_id = ?", [req.params.id], (err,result) => {
+        if(err){res.send('Error');}
+        else{res.send(result);}
+    });
+});

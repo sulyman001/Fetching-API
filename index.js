@@ -114,7 +114,7 @@ app.post('/student/create', (req, res) => {
 });
 
 // Delete 1 from student db 
-//  This isn't running yet TODO
+// TODO This isn't running yet
 app.delete('/student/:id', (req, res) => {
     connection.query("DELETE from student WHERE student_id = ?", [req.params.id], (err, result) => {
         if(err){
@@ -234,7 +234,13 @@ app.patch('/teacher/update/:id', (req, res) =>{
     });
 });
 
-
+// Delete from teacher
+app.delete('/teacher/:id', (req, res) => {
+    connection.query("DELETE from teacher WHERE teacher_id = ?", [req.params.id], (err, result) => {
+        if(err){res.send('Error');}
+        else{res.send(result);}
+    });
+});
 
 
 
