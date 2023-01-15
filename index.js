@@ -299,8 +299,57 @@ app.delete('/classroom/:id', (req, res) => {
     });
 });
 
+// Classroom_students
+// Get all
+app.get('/classroom_student', (req, res) => {
+    connection.query("select * from classroom_student", (err, result) => {
+        if(err) {
+            res.send('Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
 
+// Get one 
+app.get('/classroom_student/:id', (req, res) => {
+    connection.query("select * from classroom_student where classroom_student_id = ?", [req.params.id], (err, result) => {
+        if(err){
+            res.send('Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
 
+// Create into classroom_student
+app.post('/classroom_student/create', (req, res) => {
+    let classroom_student = req.body;
+    let query = "insert into classroom_student (classroom_student_id, classroom_id, student_id) values (?, ?, ?) ";
+    connection.query(query, [classroom_student.classroom_student_id, classroom_student.classroom_id, classroom_student.student_id], (err, results) => {
+        if (err){
+            return res.status(500);
+        } else {
+            res.status(200).json({message: 'Information has been succesfully updated'});
+        }
+    });
+});
+
+// Update in classroom_student
+app.patch('/classroom_student/update/:id', (req,res) => {
+    let classroom_student = req.body;
+    let query = "update classroom_student set classroom_student_id = ?, classroom_id = ?, student_id = ?";
+    connection.query(query, [classroom_student.classroom_student_id, classroom_student.classroom_id, classroom_student.student_id, Number(req.params.id)], (err, results) => {
+        if (err){
+            return res.status(500).json(err);
+        } else {
+            if(results.affectedRows == 0){
+                return res.status(404).json({message: 'Product id is not found'});
+            }
+            return res.status(200).json({message:'Product updated successfully'});
+        }
+    });
+});
 
 
 
