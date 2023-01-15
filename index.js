@@ -4,7 +4,7 @@ const swaggerUI = require('swagger-ui-express');
 
 const swaggerDocs = require('./swagger');
 const connection = require('./connection');
-const { query } = require('./connection');
+const { query, connect } = require('./connection');
 
 app.use(express.json({extended: false}));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
@@ -350,6 +350,15 @@ app.patch('/classroom_student/update/:id', (req,res) => {
         }
     });
 });
+
+// Delete from classroom_students
+app.delete('/classroom_student/:id', (req, res) => {
+    connection.query("DELETE from classroom_student WHERE classroom_student_id = ?", [req.params.id], (err, results) => {
+        if(err){res.send('Error');}
+        else{res.send(results);}
+    });
+});
+
 
 
 
