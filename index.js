@@ -360,6 +360,70 @@ app.delete('/classroom_student/:id', (req, res) => {
 });
 
 
+// Grade
+// Get all 
+app.get('/grade', (req, res) => {
+    connection.query("select * from grade", (err, result) => {
+        if(err) {
+            res.send('Error');
+        }else {
+            res.send(result);
+        }
+    });
+});
+
+// Get one
+app.get('/grade/:id', (req, res) => {
+    connection.query("select * from grade where grade = ?", [req.params.id], (err, result) => {
+        if(err){
+            res.send('Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+// Create 
+app.post('/grade/create', (req, res) => {
+    let grade = req.body;
+    let query = " insert into grade (grade_id, name, desc_) values (?, ?, ?)";
+    connection.query(query, [grade.grade_id, grade.name, grade.desc_], (err, results) => {
+        if(err){
+            return res.status(500);
+        }else {
+            res.status(200).json({message: 'Information successfully updated'});
+        }
+    });
+});
+
+// Update
+app.patch('/grade/update/:id', (req, res) => {
+    let grade = req.body;
+    let query = "UPDATE grade set grade_id = ?, name = ?, desc_ = ?";
+    connection.query(query, [grade.grade_id, grade.name, grade.desc_, Number(req.param.id)], (err, results) => {
+        if(err){
+            return res.status(500).json(err);
+        }else {
+            if(results.affectedRows == 0){
+                return res.status(404).json({message: 'Product id is not found'});
+            }
+            return res.status(200).json({message:'Product updated successfully'});
+        }
+    });
+});
+
+// Delete
+app. delete('/grade/:id', (req, res) => {
+    connection.query("DELETE from grade WHERE grade_id = ?", [req.params.id], (err, result) => {
+        if (err){
+            res.send('Error');
+        }else {
+            res.send(result);
+        }
+    });
+});
+
+
 
 
 app.listen('5000', () => {console.log('Connection successful on port 5000')});
